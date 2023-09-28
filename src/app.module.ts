@@ -6,10 +6,10 @@ import { database_config } from '@configs/configuration.config';
 import { ExampleModule } from '@modules/example/example.module';
 @Module({
   imports: [
-    ConfigModule.forRoot({ 
+    ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: process.env.NODE_ENV === 'development' ? '.env.dev' : '.env',
-      load: [database_config], 
+      load: [database_config],
     }),
     ExampleModule,
   ],
