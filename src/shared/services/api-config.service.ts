@@ -45,7 +45,7 @@ export class ApiConfigService {
 
   get app(): AppConfig {
     return {
-      port: this.getNumber('PORT'),
+      port: this.getNumber('APP_PORT'),
     };
   }
 
