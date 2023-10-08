@@ -21,8 +21,11 @@
 			"@modules/*": [
 				"src/modules/*"
 			],
-			"@services/*":[
+			"@services/*": [
 				"src/modules/user/services/*"
+			],
+			"@controllers/*": [
+				"src/modules/user/controllers/*"
 			],
 			"@configs/*": [
 				"src/configs/*"
