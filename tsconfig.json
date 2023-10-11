@@ -22,10 +22,12 @@
 				"src/modules/*"
 			],
 			"@services/*": [
-				"src/modules/user/services/*"
+				"src/modules/user/services/*",
+				"src/modules/auth/services/*"
 			],
 			"@controllers/*": [
-				"src/modules/user/controllers/*"
+				"src/modules/user/controllers/*",
+				"src/modules/auth/controllers/*"
 			],
 			"@configs/*": [
 				"src/configs/*"
@@ -38,6 +40,13 @@
 			],
 			"@shared/*": [
 				"src/shared/*"
+			],
+			"@strategies/*": [
+				"src/strategies/*",
+				"src/modules/auth/strategies/*"
+			],
+			"@dtos/*": [
+				"src/dtos/*"
 			],
 		},
 	}

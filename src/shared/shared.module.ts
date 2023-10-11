@@ -1,9 +1,11 @@
 import { Global, Module, Provider } from "@nestjs/common";
 import { ApiConfigService } from "./services/api-config.service";
+import { TransformInterceptor } from "./interceptor/response-transform.interceptor";
 
 
 const providers: Provider[] = [
-	ApiConfigService
+	ApiConfigService,
+	TransformInterceptor
 ]
 
 @Global()

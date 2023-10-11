@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { isNil } from 'lodash';
-import { AppConfig, DatabaseConfig } from '@interfaces/configuration.interface';
+import {
+  AppConfig,
+  DatabaseConfig,
+  OAuth,
+  OAuthGoogle,
+} from '@interfaces/configuration.interface';
 
 @Injectable()
 export class ApiConfigService {
@@ -54,6 +59,20 @@ export class ApiConfigService {
       host: this.getString('DATABASE_HOST'),
       port: this.getNumber('DATABASE_PORT'),
       uri: this.getString('DATABASE_URI'),
+    };
+  }
+
+  get oauth(): OAuth {
+    return {
+      google: this.getOAuthGoogle(),
+    };
+  }
+
+  private getOAuthGoogle(): OAuthGoogle {
+    return {
+      clientId: this.getString('GOOGLE_CLIENT_ID'),
+      clientSecret: this.getString('GOOGLE_CLIENT_SECRET'),
+      redirectUri: this.getString('GOOGLE_REDIRECT_URI'),
     };
   }
 }
