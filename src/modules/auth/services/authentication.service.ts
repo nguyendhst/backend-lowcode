@@ -6,7 +6,7 @@ import { LoginDto, RefreshDto } from '@dtos/auth.dto';
 
 @Injectable()
 export class AuthenticationService {
-  findOrCreateGoogleUser(profile: any) {
+  async findOrCreateGoogleUser(profile: any) {
     throw new Error('Method not implemented.');
   }
   refresh(loginDto: RefreshDto) {
@@ -26,23 +26,6 @@ export class AuthenticationService {
       return user;
     }
     return null;
-  }
-
-  async login(payload: LoginDto) {
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
-  }
-
-  async register(user: User) {
-    const createdUser = await this.userService.create(user);
-    const payload = {
-      username: `${createdUser.firstName}${createdUser.lastName}`, // TODO: consider a better username format
-      sub: createdUser.id,
-    };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
   }
 
   private async checkPassword(attempt: string) {

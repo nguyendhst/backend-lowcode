@@ -18,7 +18,7 @@ export class OAuthController {
   @UseGuards(AuthGuard('google'))
   async googleLoginCallback(@Req() req, @Res() res) {
     const user = req.user;
-    const token = await this.authService.generateToken(user);
-    res.redirect(`${this.apiConfigService.oauth.google.redirectUri}?token=${token}`);
+    // TODO: generate access - refresh pair for user
+    //const token =
   }
 }

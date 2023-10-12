@@ -5,11 +5,13 @@ import { GoogleOAuthStrategy } from '@strategies/google-oauth.strategy';
 import { UserModule } from '@modules/user/user.module';
 import { AuthenticationController } from '@controllers/authentication.controller';
 import { SharedModule } from '@shared/shared.module';
+import { JwtService } from '@nestjs/jwt';
+import { OAuthController } from './controllers/oauth.controller';
 
 @Module({
   imports: [UserModule, PassportModule, SharedModule],
-  providers: [AuthenticationService, GoogleOAuthStrategy],
-  controllers: [AuthenticationController],
+  providers: [AuthenticationService, GoogleOAuthStrategy, JwtService],
+  controllers: [AuthenticationController, OAuthController],
   exports: [AuthenticationService],
 })
 export class AuthModule {}

@@ -6,13 +6,8 @@ import { LoginDto, RefreshDto } from '@dtos/auth.dto';
 export class AuthenticationController {
   constructor(private readonly authService: AuthenticationService) {}
 
-  @Post('login')
-  async login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
-  }
-
   @Post('refresh')
   async refresh(@Body() loginDto: RefreshDto) {
-	return this.authService.refresh(loginDto);
+    return this.authService.refresh(loginDto);
   }
 }
