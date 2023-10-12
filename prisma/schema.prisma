@@ -19,104 +19,104 @@ model User {
   firstName String
   email     String @unique
 
-  provider ThirdParty?
+  // provider ThirdParty?
 
-  projects          Project[]
-  businessProcesses BusinessProcess[]
-  connections       ConnectionConfiguration[]
-
-  createAt DateTime @default(now())
-  updateAt DateTime @updatedAt
-}
-
-model ThirdParty {
-  id                   Int      @id @default(autoincrement())
-  provider             String
-  provider_id          String   @unique @default(uuid()) // consider remove
-  accessToken          String
-  user                 User     @relation(fields: [userId], references: [uuid])
-  userId               String   @unique
-  accessTokenExpiredAt DateTime
-}
-
-model Project {
-  id    Int    @id @default(autoincrement())
-  title String
-  view  Json
-
-  user   User   @relation(fields: [userId], references: [uuid])
-  userId String
-
-  businessProcesses ProcessesOfProjects[]
-  connections       ConnectionsOnProjects[]
+  // projects          Project[]
+  // businessProcesses BusinessProcess[]
+  // connections       ConnectionConfiguration[]
 
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
 }
 
-model BusinessProcess {
-  id    Int    @id @default(autoincrement())
-  title String
-  view  Json
+// model ThirdParty {
+//   id                   Int      @id @default(autoincrement())
+//   provider             String
+//   provider_id          String   @unique @default(uuid()) // consider remove
+//   accessToken          String
+//   user                 User     @relation(fields: [userId], references: [uuid])
+//   userId               String   @unique
+//   accessTokenExpiredAt DateTime
+// }
 
-  user   User   @relation(fields: [userId], references: [uuid])
-  userId String
+// model Project {
+//   id    Int    @id @default(autoincrement())
+//   title String
+//   view  Json
 
-  projects ProcessesOfProjects[]
+//   user   User   @relation(fields: [userId], references: [uuid])
+//   userId String
 
-  createAt DateTime @default(now())
-  updateAt DateTime @updatedAt
-}
+//   businessProcesses ProcessesOfProjects[]
+//   connections       ConnectionsOnProjects[]
 
-model ProcessesOfProjects {
-  project   Project         @relation(fields: [projectId], references: [id])
-  projectId Int
-  process   BusinessProcess @relation(fields: [processId], references: [id])
-  processId Int
+//   createAt DateTime @default(now())
+//   updateAt DateTime @updatedAt
+// }
 
-  @@id([projectId, processId])
-}
+// model BusinessProcess {
+//   id    Int    @id @default(autoincrement())
+//   title String
+//   view  Json
 
-model ExternalDatasource {
-  id           Int    @id @default(autoincrement())
-  databaseName String
+//   user   User   @relation(fields: [userId], references: [uuid])
+//   userId String
 
-  connections ConnectionConfiguration[]
-}
+//   projects ProcessesOfProjects[]
 
-model ConnectionConfiguration {
-  id   Int    @id @default(autoincrement())
-  name String
+//   createAt DateTime @default(now())
+//   updateAt DateTime @updatedAt
+// }
 
-  type String
+// model ProcessesOfProjects {
+//   project   Project         @relation(fields: [projectId], references: [id])
+//   projectId Int
+//   process   BusinessProcess @relation(fields: [processId], references: [id])
+//   processId Int
 
-  // as localhost/etc
-  host         String
-  port         String
-  DatabaseName String
-  Username     String
-  Password     String
+//   @@id([projectId, processId])
+// }
 
-  // other
-  connectionString String
+// model ExternalDatasource {
+//   id           Int    @id @default(autoincrement())
+//   databaseName String
 
-  permission String
+//   connections ConnectionConfiguration[]
+// }
 
-  user                User                    @relation(fields: [userId], references: [uuid])
-  userId              String
-  exeternalDatasource ExternalDatasource      @relation(fields: [exDatasourceId], references: [id])
-  exDatasourceId      Int
-  projects            ConnectionsOnProjects[]
-}
+// model ConnectionConfiguration {
+//   id   Int    @id @default(autoincrement())
+//   name String
 
-model ConnectionsOnProjects {
-  project      Project                 @relation(fields: [projectId], references: [id])
-  projectId    Int
-  connection   ConnectionConfiguration @relation(fields: [connectionId], references: [id])
-  connectionId Int
+//   type String
 
-  @@id([projectId, connectionId])
-}
+//   // as localhost/etc
+//   host         String
+//   port         String
+//   DatabaseName String
+//   Username     String
+//   Password     String
+
+//   // other
+//   connectionString String
+
+//   permission String
+
+//   user                User                    @relation(fields: [userId], references: [uuid])
+//   userId              String
+//   exeternalDatasource ExternalDatasource      @relation(fields: [exDatasourceId], references: [id])
+//   exDatasourceId      Int
+//   projects            ConnectionsOnProjects[]
+// }
+
+// model ConnectionsOnProjects {
+//   project      Project                 @relation(fields: [projectId], references: [id])
+//   projectId    Int
+//   connection   ConnectionConfiguration @relation(fields: [connectionId], references: [id])
+//   connectionId Int
+
+//   @@id([projectId, connectionId])
+// }
 
 // ! Consider models
 // model Component {

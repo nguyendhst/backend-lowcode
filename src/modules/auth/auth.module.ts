@@ -7,10 +7,11 @@ import { AuthenticationController } from '@controllers/authentication.controller
 import { SharedModule } from '@shared/shared.module';
 import { JwtService } from '@nestjs/jwt';
 import { OAuthController } from './controllers/oauth.controller';
+import { SessionSerializer } from './guard/Serializer';
 
 @Module({
   imports: [UserModule, PassportModule, SharedModule],
-  providers: [AuthenticationService, GoogleOAuthStrategy, JwtService],
+  providers: [AuthenticationService, GoogleOAuthStrategy, JwtService, SessionSerializer],
   controllers: [AuthenticationController, OAuthController],
   exports: [AuthenticationService],
 })

@@ -24,7 +24,14 @@ export class GoogleOAuthStrategy extends PassportStrategy(Strategy, 'google') {
     profile: any,
     done: VerifyCallback,
   ) {
-    const user = await this.authService.findOrCreateGoogleUser(profile);
-    done(null, user);
+    console.log(profile);
+
+    const user = await this.authService.validateUser({
+      firstName: profile.name.familyName,
+      lastName: profile.name.givenName,
+      email: profile.emails[0].value
+    })
+    
+    return user;
   }
 }

@@ -10,6 +10,9 @@ import { SharedModule } from '@shared/shared.module';
 import { ValidationPipe } from '@nestjs/common';
 import { TransformInterceptor } from '@shared/interceptor/response-transform.interceptor';
 
+import * as session from 'express-session';
+import * as passport from 'passport';
+
 export async function bootstrap(): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(
     AppModule,
@@ -32,6 +35,17 @@ export async function bootstrap(): Promise<NestExpressApplication> {
   const globalPrefix = 'api';
 
   app.setGlobalPrefix(globalPrefix);
+
+  app.use(session({
+    secret: 'encrypt cookies',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 60*60*1000,
+    }
+  }))
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   const shutdown = () => {
     app

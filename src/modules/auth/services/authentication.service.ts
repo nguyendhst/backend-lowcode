@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { UserService } from '@services/user.service';
 import { LoginDto, RefreshDto } from '@dtos/auth.dto';
+import { UserDTO } from '@dtos/user.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -20,12 +21,23 @@ export class AuthenticationService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(username: string, password: string): Promise<User> {
-    const user: User = await this.userService.findByUsername(username);
-    if (user && (await this.checkPassword(password))) {
-      return user;
-    }
-    return null;
+  async findUserById(id: number) {
+    const user = await this.userService.getUserById(id);
+    return user;
+  }
+
+  async validateUser(profile: UserDTO): Promise<User> {
+    console.log(profile)
+
+    const user: User = await this.userService.getUserByEmail(profile.email);
+
+    if (user) return user;
+
+    const newUser = await this.userService.createUser(profile);
+
+    console.log("new user:" + newUser);
+
+    return newUser || null;
   }
 
   private async checkPassword(attempt: string) {

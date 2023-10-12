@@ -11,6 +11,7 @@ import { AuthenticationController } from './modules/auth/controllers/authenticat
 import { OAuthController } from './modules/auth/controllers/oauth.controller';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './shared/interceptor/logging.interceptor';
+import { PassportModule } from '@nestjs/passport';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -21,6 +22,7 @@ import { LoggingInterceptor } from './shared/interceptor/logging.interceptor';
     SharedModule,
     UserModule,
     AuthModule,
+    PassportModule.register({ session: true }),
   ],
   controllers: [
     AppController,
