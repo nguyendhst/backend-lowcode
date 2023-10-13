@@ -2,22 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { UserService } from '@services/user.service';
-import { LoginDto, RefreshDto } from '@dtos/auth.dto';
 import { UserDTO } from '@dtos/user.dto';
+import { ApiConfigService } from '@shared/services/api-config.service';
+import { RefreshDto } from '../../../dtos/auth.dto';
 
 @Injectable()
 export class AuthenticationService {
-  async findOrCreateGoogleUser(profile: any) {
-    throw new Error('Method not implemented.');
-  }
   refresh(loginDto: RefreshDto) {
-    throw new Error('Method not implemented.');
-  }
-  async generateToken(user: User) {
-    throw new Error('Method not implemented.');
+	  throw new Error('Method not implemented.');
   }
   constructor(
     private readonly userService: UserService,
+    private readonly apiConfigService: ApiConfigService,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -27,17 +23,38 @@ export class AuthenticationService {
   }
 
   async validateUser(profile: UserDTO): Promise<User> {
-    console.log(profile)
+    const user = await this.userService.getUserByEmail(profile.email);
 
-    const user: User = await this.userService.getUserByEmail(profile.email);
-
-    if (user) return user;
+    if (user) {
+      return user;
+    }
 
     const newUser = await this.userService.createUser(profile);
 
-    console.log("new user:" + newUser);
+    return newUser;
+  }
 
-    return newUser || null;
+  async login(user: UserDTO): Promise<[string, string]> {
+    const payload = { email: user.email };
+
+    return [
+      await this.generateAccessToken(payload),
+      await this.generateRefreshToken(payload),
+    ];
+  }
+
+  private async generateAccessToken(payload: any): Promise<string> {
+    return this.jwtService.signAsync(payload, {
+      secret: `${this.apiConfigService.jwt.secret}access`,
+      expiresIn: this.apiConfigService.jwt.accessTokenExpiresIn,
+    });
+  }
+
+  private async generateRefreshToken(payload: any): Promise<string> {
+    return this.jwtService.signAsync(payload, {
+      secret: `${this.apiConfigService.jwt.secret}refresh`,
+      expiresIn: this.apiConfigService.jwt.refreshTokenExpiresIn,
+    });
   }
 
   private async checkPassword(attempt: string) {

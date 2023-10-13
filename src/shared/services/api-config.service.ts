@@ -4,6 +4,7 @@ import { isNil } from 'lodash';
 import {
   AppConfig,
   DatabaseConfig,
+  JWT,
   OAuth,
   OAuthGoogle,
 } from '@interfaces/configuration.interface';
@@ -64,7 +65,17 @@ export class ApiConfigService {
 
   get oauth(): OAuth {
     return {
+      clientUrl: this.getString('CLIENT_URL'),
       google: this.getOAuthGoogle(),
+    };
+  }
+
+  get jwt(): JWT {
+    return {
+      secret: this.getString('JWT_SECRET'),
+      expiresIn: this.getString('JWT_EXPIRES_IN'),
+	  accessTokenExpiresIn: this.getString('JWT_ACCESS_TOKEN_EXPIRES_IN'),
+	  refreshTokenExpiresIn: this.getString('JWT_REFRESH_TOKEN_EXPIRES_IN'),
     };
   }
 

@@ -5,13 +5,32 @@ import { GoogleOAuthStrategy } from '@strategies/google-oauth.strategy';
 import { UserModule } from '@modules/user/user.module';
 import { AuthenticationController } from '@controllers/authentication.controller';
 import { SharedModule } from '@shared/shared.module';
-import { JwtService } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { OAuthController } from './controllers/oauth.controller';
-import { SessionSerializer } from './guard/Serializer';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { ApiConfigService } from '@shared/services/api-config.service';
 
 @Module({
-  imports: [UserModule, PassportModule, SharedModule],
-  providers: [AuthenticationService, GoogleOAuthStrategy, JwtService, SessionSerializer],
+  imports: [
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    UserModule,
+    PassportModule,
+    SharedModule,
+    JwtModule.registerAsync({
+      global: true,
+      inject: [ApiConfigService],
+      useFactory: async (apiConfigService: ApiConfigService) => ({
+        secret: apiConfigService.jwt.secret,
+        signOptions: { expiresIn: apiConfigService.jwt.expiresIn },
+      }),
+    }),
+  ],
+  providers: [
+    AuthenticationService,
+    GoogleOAuthStrategy,
+    JwtStrategy,
+    JwtService,
+  ],
   controllers: [AuthenticationController, OAuthController],
   exports: [AuthenticationService],
 })

@@ -48,6 +48,13 @@
 			"@dtos/*": [
 				"src/dtos/*"
 			],
+			"@constants/*": [
+				"src/constants/*",
+				"src/constants"
+			],
+			"@decorators/*": [
+				"src/decorators/*"
+			],
 		},
 	}
 }
