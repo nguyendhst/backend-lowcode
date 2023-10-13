@@ -74,8 +74,8 @@ export class ApiConfigService {
     return {
       secret: this.getString('JWT_SECRET'),
       expiresIn: this.getString('JWT_EXPIRES_IN'),
-	  accessTokenExpiresIn: this.getString('JWT_ACCESS_TOKEN_EXPIRES_IN'),
-	  refreshTokenExpiresIn: this.getString('JWT_REFRESH_TOKEN_EXPIRES_IN'),
+	    accessTokenExpiresIn: this.getString('JWT_ACCESS_TOKEN_EXPIRES_IN'),
+	    refreshTokenExpiresIn: this.getString('JWT_REFRESH_TOKEN_EXPIRES_IN'),
     };
   }
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { UserService } from '@services/user.service';
@@ -8,8 +8,32 @@ import { RefreshDto } from '../../../dtos/auth.dto';
 
 @Injectable()
 export class AuthenticationService {
-  refresh(loginDto: RefreshDto) {
-	  throw new Error('Method not implemented.');
+  async refresh(loginDto: RefreshDto) {
+    try {
+      const verifyToken = await this.jwtService.verifyAsync(loginDto.RefreshToken, {
+        secret: `${this.apiConfigService.jwt.secret}refresh`,
+      })
+
+      if (!verifyToken) {
+        throw new ForbiddenException({
+          msg: "Failed to authenticate user!"
+        })
+      }
+
+      delete verifyToken.exp;
+      delete verifyToken.iat;
+  
+      const [newAt,newRt] = [
+        await this.generateAccessToken(verifyToken),
+        await this.generateRefreshToken(verifyToken)
+      ] 
+  
+      return [newAt, newRt];
+      
+    } catch (error) {
+      throw new ForbiddenException(error)
+    }
+  
   }
   constructor(
     private readonly userService: UserService,
