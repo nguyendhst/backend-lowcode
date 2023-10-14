@@ -9,6 +9,7 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { OAuthController } from './controllers/oauth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { ApiConfigService } from '@shared/services/api-config.service';
+import { PasetoStrategy } from './strategies/paseto.strategy';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ApiConfigService } from '@shared/services/api-config.service';
     GoogleOAuthStrategy,
     JwtStrategy,
     JwtService,
+    PasetoStrategy,
   ],
   controllers: [AuthenticationController, OAuthController],
   exports: [AuthenticationService],

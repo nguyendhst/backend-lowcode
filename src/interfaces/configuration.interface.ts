@@ -1,32 +1,45 @@
-export interface Configuration {
+export type Configuration = {
   database: DatabaseConfig;
   app: AppConfig;
 }
 
-export interface DatabaseConfig {
+export type DatabaseConfig = {
   host: string;
   port: number;
   uri: string;
 }
 
-export interface OAuth {
+export type OAuth = {
   clientUrl: string;
   google: OAuthGoogle;
 }
 
-export interface OAuthGoogle {
+export type OAuthGoogle = {
   clientId: string;
   clientSecret: string;
   redirectUri: string;
 }
 
-export interface JWT {
+export type JWT = {
   secret: string;
   expiresIn: string;
   accessTokenExpiresIn: string;
   refreshTokenExpiresIn: string;
 }
 
-export interface AppConfig {
+export type PASETO = {
+  secret: string;
+  expiresIn: string;
+  accessTokenExpiresIn: string;
+  refreshTokenExpiresIn: string;
+}
+
+export type AuthConfig = {
+  strategy: string;
+  jwt: JWT;
+  paseto: PASETO;
+}
+
+export type AppConfig = {
   port: number;
 }

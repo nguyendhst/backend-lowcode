@@ -4,7 +4,8 @@ import { User } from '@prisma/client';
 import { UserService } from '@services/user.service';
 import { UserDTO } from '@dtos/user.dto';
 import { ApiConfigService } from '@shared/services/api-config.service';
-import { RefreshDto } from '../../../dtos/auth.dto';
+import { RefreshDto } from '@dtos/auth.dto';
+import { PasetoService } from '@shared/services/paseto.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -24,8 +25,8 @@ export class AuthenticationService {
       delete verifyToken.iat;
   
       const [newAt,newRt] = [
-        await this.generateAccessToken(verifyToken),
-        await this.generateRefreshToken(verifyToken)
+        await this.generateJWTAccessToken(verifyToken),
+        await this.generateJWTRefreshToken(verifyToken)
       ] 
   
       return [newAt, newRt];
@@ -39,6 +40,7 @@ export class AuthenticationService {
     private readonly userService: UserService,
     private readonly apiConfigService: ApiConfigService,
     private readonly jwtService: JwtService,
+    private readonly pasetoService: PasetoService,
   ) {}
 
   async findUserById(id: number) {
@@ -62,26 +64,30 @@ export class AuthenticationService {
     const payload = { email: user.email };
 
     return [
-      await this.generateAccessToken(payload),
-      await this.generateRefreshToken(payload),
+      await this.generatePASETOAccessToken(payload),
+      await this.generatePASETORefreshToken(payload),
     ];
   }
 
-  private async generateAccessToken(payload: any): Promise<string> {
+  private async generateJWTAccessToken(payload: any): Promise<string> {
     return this.jwtService.signAsync(payload, {
       secret: `${this.apiConfigService.jwt.secret}access`,
       expiresIn: this.apiConfigService.jwt.accessTokenExpiresIn,
     });
   }
 
-  private async generateRefreshToken(payload: any): Promise<string> {
+  private async generateJWTRefreshToken(payload: any): Promise<string> {
     return this.jwtService.signAsync(payload, {
       secret: `${this.apiConfigService.jwt.secret}refresh`,
       expiresIn: this.apiConfigService.jwt.refreshTokenExpiresIn,
     });
   }
 
-  private async checkPassword(attempt: string) {
-    return true;
+  private async generatePASETOAccessToken(payload: any): Promise<string> {
+	return this.pasetoService.generateToken(payload, 'local');
+  }
+
+  private async generatePASETORefreshToken(payload: any): Promise<string> {
+	return this.pasetoService.generateToken(payload, 'local');
   }
 }

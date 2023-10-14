@@ -8,9 +8,17 @@ import { AuthModule } from '@modules/auth/auth.module';
 import { UserController } from '@modules/user/controllers/user.controller';
 import { AuthenticationController } from '@modules/auth/controllers/authentication.controller';
 import { OAuthController } from '@modules/auth/controllers/oauth.controller';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import {
+  APP_FILTER,
+  APP_GUARD,
+  APP_INTERCEPTOR,
+  Reflector,
+} from '@nestjs/core';
 import { LoggingInterceptor } from './shared/interceptor/logging.interceptor';
-import { JwtAuthGuard } from './guards/auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { PasetoAuthGuard } from './guards/paseto-auth.guard';
+import { HttpExceptionFilter } from './filters/http-exception.filter';
+import { ApiConfigService } from './shared/services/api-config.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -35,7 +43,24 @@ import { JwtAuthGuard } from './guards/auth.guard';
     },
     {
       provide: APP_GUARD,
-      useClass: JwtAuthGuard,
+      useFactory: (
+        apiConfigService: ApiConfigService,
+        reflector: Reflector,
+      ) => {
+        switch (apiConfigService.authConfig.strategy) {
+          case 'jwt':
+            return new JwtAuthGuard(reflector);
+          case 'paseto':
+            return new PasetoAuthGuard(reflector);
+          default:
+            throw new Error('Unknown strategy');
+        }
+      },
+      inject: [ApiConfigService, Reflector],
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
     },
   ],
 })

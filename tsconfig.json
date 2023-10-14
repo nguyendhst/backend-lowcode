@@ -55,6 +55,9 @@
 			"@decorators/*": [
 				"src/decorators/*"
 			],
+			"@guards/*": [
+				"src/guards/*"
+			],
 		},
 	}
 }

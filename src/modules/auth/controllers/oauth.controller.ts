@@ -1,4 +1,11 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpStatus,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthenticationService } from '@services/authentication.service';
 import { ApiConfigService } from '@shared/services/api-config.service';
@@ -23,13 +30,7 @@ export class OAuthController {
     console.log(JSON.stringify(user));
     const tokens: [string, string] = await this.authService.login(user);
 
-    // redirect to frontend
-    const urlParams = new URLSearchParams();
-    urlParams.append('accessToken', tokens[0]);
-    urlParams.append('refreshToken', tokens[1]);
-
-    res.redirect(
-      this.apiConfigService.oauth.clientUrl + '/auth/success?' + urlParams.toString(),
-    );
+	res.setHeader('Content-Type', 'application/json');
+    res.status(HttpStatus.OK).send(tokens);
   }
 }
