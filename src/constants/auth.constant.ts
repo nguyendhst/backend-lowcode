@@ -4,4 +4,6 @@ export const AUTH = {
   DESC: 'DESC',
 } as const;
 
+export const TOKEN_SERVICE = "ITokenService";
+
 export type RouteAuthType = ValueOf<typeof AUTH>;

@@ -36,7 +36,8 @@
 				"src/repositories/*"
 			],
 			"@interfaces/*": [
-				"src/interfaces/*"
+				"src/interfaces/*",
+				"src/modules/auth/interfaces/*"
 			],
 			"@shared/*": [
 				"src/shared/*"

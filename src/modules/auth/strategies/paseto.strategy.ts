@@ -29,7 +29,7 @@ export class PasetoStrategy extends PassportStrategy(Strategy, 'paseto') {
   }
 
   private async verifyToken(token: string): Promise<AuthPayloadDto> {
-    return await this.pasetoService.verifyToken(token);
+    return await this.pasetoService.verifyTokenAsync(token);
   }
 
   private extractTokenFromRequest(req: Request): string {
