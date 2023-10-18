@@ -4,38 +4,48 @@ import { User } from '@prisma/client';
 import { UserService } from '@services/user.service';
 import { UserDTO } from '@dtos/user.dto';
 import { ApiConfigService } from '@shared/services/api-config.service';
-import { RefreshDto } from '@dtos/auth.dto';
+import { AuthPayloadDto, RefreshDto } from '@dtos/auth.dto';
 import { PasetoService } from '@shared/services/paseto.service';
 
 @Injectable()
 export class AuthenticationService {
-  async refresh(loginDto: RefreshDto) {
-    try {
-      const verifyToken = await this.jwtService.verifyAsync(loginDto.RefreshToken, {
-        secret: `${this.apiConfigService.jwt.secret}refresh`,
-      })
+  async refresh(refreshDto: RefreshDto) {
+    if (this.apiConfigService.authConfig.strategy === 'paseto') {
+      try {
+        const verifyToken = await this.pasetoService.verifyToken(refreshDto.RefreshToken);
 
-      if (!verifyToken) {
-        throw new ForbiddenException({
-          msg: "Failed to authenticate user!"
-        })
+        const user = await this.userService.getUserByEmail(verifyToken.email);
+
+        if (!user) {
+          throw new ForbiddenException('User not found');
+        }
+
+        const payload = {
+          id: user.id,
+          name: user.firstName + ' ' + user.lastName,
+          email: user.email,
+
+          // at rt from google
+          accessToken: verifyToken.accessToken,
+          refreshToken: verifyToken.refreshToken,
+        }
+
+        const [newAt,newRt] = [
+          await this.generatePASETOAccessToken(payload),
+          await this.generatePASETORefreshToken(payload)
+        ] 
+    
+        return [newAt, newRt];
+
+      } catch (error) {
+        throw new ForbiddenException(error.message);
       }
-
-      delete verifyToken.exp;
-      delete verifyToken.iat;
-  
-      const [newAt,newRt] = [
-        await this.generateJWTAccessToken(verifyToken),
-        await this.generateJWTRefreshToken(verifyToken)
-      ] 
-  
-      return [newAt, newRt];
-      
-    } catch (error) {
-      throw new ForbiddenException(error)
     }
-  
+
+    return 'refresh token jwt';
+
   }
+
   constructor(
     private readonly userService: UserService,
     private readonly apiConfigService: ApiConfigService,
@@ -60,8 +70,10 @@ export class AuthenticationService {
     return newUser;
   }
 
-  async login(user: UserDTO): Promise<[string, string]> {
-    const payload = { email: user.email };
+  async login(user: AuthPayloadDto): Promise<[string, string]> {
+    const payload = { 
+      ...user
+    };
 
     return [
       await this.generatePASETOAccessToken(payload),
@@ -69,25 +81,27 @@ export class AuthenticationService {
     ];
   }
 
-  private async generateJWTAccessToken(payload: any): Promise<string> {
+  private async generateJWTAccessToken(payload: AuthPayloadDto): Promise<string> {
+    // if use this must encrypt the at, rt in payload
+
     return this.jwtService.signAsync(payload, {
       secret: `${this.apiConfigService.jwt.secret}access`,
       expiresIn: this.apiConfigService.jwt.accessTokenExpiresIn,
     });
   }
 
-  private async generateJWTRefreshToken(payload: any): Promise<string> {
+  private async generateJWTRefreshToken(payload: AuthPayloadDto): Promise<string> {
     return this.jwtService.signAsync(payload, {
       secret: `${this.apiConfigService.jwt.secret}refresh`,
       expiresIn: this.apiConfigService.jwt.refreshTokenExpiresIn,
     });
   }
 
-  private async generatePASETOAccessToken(payload: any): Promise<string> {
+  private async generatePASETOAccessToken(payload: AuthPayloadDto): Promise<string> {
 	return this.pasetoService.generateToken(payload, 'local');
   }
 
-  private async generatePASETORefreshToken(payload: any): Promise<string> {
+  private async generatePASETORefreshToken(payload: AuthPayloadDto): Promise<string> {
 	return this.pasetoService.generateToken(payload, 'local');
   }
 }

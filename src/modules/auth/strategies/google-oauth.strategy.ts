@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback } from 'passport-google-oauth20';
 import { AuthenticationService } from '@services/authentication.service';
 import { ApiConfigService } from '@shared/services/api-config.service';
+import { AuthPayloadDto } from '@dtos/auth.dto';
 
 @Injectable()
 export class GoogleOAuthStrategy extends PassportStrategy(Strategy, 'google') {
@@ -23,15 +24,22 @@ export class GoogleOAuthStrategy extends PassportStrategy(Strategy, 'google') {
     refreshToken: string,
     profile: any,
     done: VerifyCallback,
-  ) {
-    console.log(profile);
-
+  ) : Promise<AuthPayloadDto> {
     const user = await this.authService.validateUser({
       firstName: profile.name.familyName,
       lastName: profile.name.givenName,
-      email: profile.emails[0].value
-    })
-    
-    return user;
+      email: profile.emails[0].value,
+    });
+
+    const returnUser = {
+      id: user.id,
+      name: user.firstName + ' ' + user.lastName,
+      email: user.email,
+      
+      accessToken: accessToken,
+      refreshToken: refreshToken
+    }
+
+    return returnUser;
   }
 }

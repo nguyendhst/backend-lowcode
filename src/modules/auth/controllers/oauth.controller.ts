@@ -27,10 +27,10 @@ export class OAuthController {
   @UseGuards(AuthGuard('google'))
   async googleLoginCallback(@Req() req, @Res() res) {
     const user = req.user;
-    console.log(JSON.stringify(user));
+    console.log("user: ", JSON.stringify(user));
     const tokens: [string, string] = await this.authService.login(user);
 
-	res.setHeader('Content-Type', 'application/json');
+	  res.setHeader('Content-Type', 'application/json');
     res.status(HttpStatus.OK).send(tokens);
-  }
+  } 
 }

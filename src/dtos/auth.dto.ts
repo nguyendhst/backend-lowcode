@@ -16,4 +16,12 @@ type RegisterResponseDto = {
   RefreshToken: string;
 };
 
-export { LoginDto, RegisterDto, RefreshDto, RegisterResponseDto };
+type AuthPayloadDto = {
+  id: number;
+  name: string;
+  email: string;
+  accessToken: string;
+  refreshToken: string;
+}
+
+export { LoginDto, RegisterDto, RefreshDto, RegisterResponseDto, AuthPayloadDto };
