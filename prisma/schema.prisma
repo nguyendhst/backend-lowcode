@@ -8,8 +8,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model User {
@@ -21,7 +22,7 @@ model User {
 
   // provider ThirdParty?
 
-  // projects          Project[]
+  projects Project[]
   // businessProcesses BusinessProcess[]
   // connections       ConnectionConfiguration[]
 
@@ -39,20 +40,20 @@ model User {
 //   accessTokenExpiredAt DateTime
 // }
 
-// model Project {
-//   id    Int    @id @default(autoincrement())
-//   title String
-//   view  Json
+model Project {
+  id    Int    @id @default(autoincrement())
+  title String
+  view  Json
 
-//   user   User   @relation(fields: [userId], references: [uuid])
-//   userId String
+  user   User   @relation(fields: [userId], references: [uuid])
+  userId String
 
-//   businessProcesses ProcessesOfProjects[]
-//   connections       ConnectionsOnProjects[]
+  // businessProcesses ProcessesOfProjects[]
+  // connections       ConnectionsOnProjects[]
 
-//   createAt DateTime @default(now())
-//   updateAt DateTime @updatedAt
-// }
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+}
 
 // model BusinessProcess {
 //   id    Int    @id @default(autoincrement())
