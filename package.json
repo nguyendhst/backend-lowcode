@@ -19,7 +19,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "db:migrate": "yarn prisma migrate dev",
-    "db:visual": "yarn prisma studio"
+    "db:visual": "yarn prisma studio",
+	"db:generate": "yarn prisma generate",
+	"db:push": "yarn prisma db push"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
