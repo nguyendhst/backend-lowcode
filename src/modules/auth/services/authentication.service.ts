@@ -44,39 +44,34 @@ export class AuthenticationService {
   }
 
   async refresh(refreshDto: RefreshDto) {
-    if (this.apiConfigService.authConfig.strategy === 'paseto') {
-      try {
-        const verifyToken = await this.tokenService.verifyTokenAsync(
-          refreshDto.RefreshToken,
-        );
+    try {
+      const verifyToken = await this.tokenService.verifyTokenAsync(
+        refreshDto.RefreshToken,
+      );
 
-        const user = await this.userService.getUserByEmail(verifyToken.email);
+      const user = await this.userService.getUserByEmail(verifyToken.email);
 
-        if (!user) {
-          throw new ForbiddenException('User not found');
-        }
-
-        const payload = {
-          id: user.id,
-          name: user.firstName + ' ' + user.lastName,
-          email: user.email,
-
-          // at rt from google
-          accessToken: verifyToken.accessToken,
-          refreshToken: verifyToken.refreshToken,
-        };
-
-        const [newAt, newRt] = [
-          await this.tokenService.generateAccessTokenAsync(payload),
-          await this.tokenService.generateRefreshTokenAsync(payload),
-        ];
-
-        return [newAt, newRt];
-      } catch (error) {
-        throw new ForbiddenException(error.message);
+      if (!user) {
+        throw new ForbiddenException('User not found');
       }
-    }
 
-    return 'refresh token jwt';
+      const payload = {
+        id: user.id,
+        email: user.email,
+
+        // at rt from google
+        accessToken: verifyToken.accessToken,
+        refreshToken: verifyToken.refreshToken,
+      };
+
+      const [newAt, newRt] = [
+        await this.tokenService.generateAccessTokenAsync(payload),
+        await this.tokenService.generateRefreshTokenAsync(payload),
+      ];
+
+      return [newAt, newRt];
+    } catch (error) {
+      throw new ForbiddenException(error.message);
+    }
   }
 }

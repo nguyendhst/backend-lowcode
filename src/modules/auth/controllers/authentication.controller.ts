@@ -9,7 +9,7 @@ import { PasetoAuthGuard } from '@guards/paseto-auth.guard';
 export class AuthenticationController {
   constructor(private readonly authService: AuthenticationService) {}
   
-  // @Public()
+  @Public()
   @UseGuards(PasetoAuthGuard)
   @Post('refresh')
   async refresh(@Body() refreshDto: RefreshDto) {

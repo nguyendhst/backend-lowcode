@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { isNil } from 'lodash';
 import {
   AppConfig,
+  AppWeb,
   AuthConfig,
   DatabaseConfig,
   JWT,
@@ -103,6 +104,12 @@ export class ApiConfigService {
       jwt: this.jwt,
       paseto: this.paseto,
     };
+  }
+
+  get appWeb(): AppWeb {
+    return {
+      clientUrl: this.getString('CLIENT_URL')
+    }
   }
 
   private getOAuthGoogle(): OAuthGoogle {

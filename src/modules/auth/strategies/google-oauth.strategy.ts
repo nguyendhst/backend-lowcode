@@ -33,7 +33,6 @@ export class GoogleOAuthStrategy extends PassportStrategy(Strategy, 'google') {
 
     const returnUser = {
       id: user.id,
-      name: user.firstName + ' ' + user.lastName,
       email: user.email,
       
       accessToken: accessToken,

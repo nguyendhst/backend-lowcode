@@ -18,7 +18,6 @@ type RegisterResponseDto = {
 
 type AuthPayloadDto = {
   id: number;
-  name: string;
   email: string;
   accessToken: string;
   refreshToken: string;

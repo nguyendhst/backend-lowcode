@@ -31,6 +31,8 @@ export class OAuthController {
     const tokens: [string, string] = await this.authService.login(user);
     // res.setHeader('Content-Type', 'application/json');
     // res.status(HttpStatus.OK).send(tokens);
-    res.redirect(`http://localhost:3001/auth/login?access_token=${tokens[0]}&refresh_token=${tokens[1]}`);
+    console.log("web service:", this.apiConfigService.appWeb)
+    const redirectUrl = this.apiConfigService.appWeb.clientUrl + `/auth/login?access_token=${tokens[0]}&refresh_token=${tokens[1]}`
+    res.redirect(redirectUrl);
   } 
 }

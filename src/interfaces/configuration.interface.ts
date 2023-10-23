@@ -43,3 +43,7 @@ export type AuthConfig = {
 export type AppConfig = {
   port: number;
 }
+
+export type AppWeb = {
+  clientUrl: string;
+}
