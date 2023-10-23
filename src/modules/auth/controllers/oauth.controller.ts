@@ -29,8 +29,8 @@ export class OAuthController {
     const user = req.user;
     console.log("user: ", JSON.stringify(user));
     const tokens: [string, string] = await this.authService.login(user);
-
-	  res.setHeader('Content-Type', 'application/json');
-    res.status(HttpStatus.OK).send(tokens);
+    // res.setHeader('Content-Type', 'application/json');
+    // res.status(HttpStatus.OK).send(tokens);
+    res.redirect(`http://localhost:3001/auth/login?access_token=${tokens[0]}&refresh_token=${tokens[1]}`);
   } 
 }
