@@ -4,12 +4,14 @@ import {
   HttpStatus,
   Req,
   Res,
+  UseFilters,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthenticationService } from '@services/authentication.service';
 import { ApiConfigService } from '@shared/services/api-config.service';
 import { Public } from '@decorators/public-route.decorator';
+import { RedirectingExceptionFilter } from '@filters/redirect-filter';
 @Controller('oauth')
 export class OAuthController {
   constructor(
@@ -19,20 +21,20 @@ export class OAuthController {
 
   @Get('google')
   @Public()
-  @UseGuards(AuthGuard('google'))
-  async googleLogin() {}
+  @UseFilters(RedirectingExceptionFilter)
+  @UseGuards(AuthGuard('google-custom'))
+  async googleLogin(@Res() res) {}
 
   @Get('google/callback')
   @Public()
-  @UseGuards(AuthGuard('google'))
+  @UseGuards(AuthGuard('google-custom'))
   async googleLoginCallback(@Req() req, @Res() res) {
     const user = req.user;
-    console.log("user: ", JSON.stringify(user));
+    console.log('user: ', JSON.stringify(user));
     const tokens: [string, string] = await this.authService.login(user);
-    // res.setHeader('Content-Type', 'application/json');
-    // res.status(HttpStatus.OK).send(tokens);
-    console.log("web service:", this.apiConfigService.appWeb)
-    const redirectUrl = this.apiConfigService.appWeb.clientUrl + `/auth/login?access_token=${tokens[0]}&refresh_token=${tokens[1]}`
-    res.redirect(redirectUrl);
-  } 
+     res.setHeader('Content-Type', 'application/json');
+     res.status(HttpStatus.OK).send(tokens);
+    //console.log('web service:', this.apiConfigService.appWeb);
+    
+  }
 }

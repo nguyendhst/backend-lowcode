@@ -40,7 +40,8 @@
 				"src/modules/auth/interfaces/*"
 			],
 			"@shared/*": [
-				"src/shared/*"
+				"src/shared/*",
+				"src/shared/services/*"
 			],
 			"@strategies/*": [
 				"src/strategies/*",
@@ -58,6 +59,12 @@
 			],
 			"@guards/*": [
 				"src/guards/*"
+			],
+			"@exceptions/*": [
+				"src/exceptions/*"
+			],
+			"@filters/*": [
+				"src/filters/*"
 			],
 		},
 	}

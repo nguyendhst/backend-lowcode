@@ -8,6 +8,7 @@ import { SharedModule } from '@shared/shared.module';
 import { OAuthController } from './controllers/oauth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { PasetoStrategy } from './strategies/paseto.strategy';
+import { CustomGoogleStrategy } from './strategies/google-oauth-custom.strategy';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { PasetoStrategy } from './strategies/paseto.strategy';
   providers: [
     AuthenticationService,
     GoogleOAuthStrategy,
+	CustomGoogleStrategy,
     JwtStrategy,
     PasetoStrategy,
   ],
