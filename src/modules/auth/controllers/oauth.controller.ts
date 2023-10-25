@@ -22,19 +22,21 @@ export class OAuthController {
   @Get('google')
   @Public()
   @UseFilters(RedirectingExceptionFilter)
-  @UseGuards(AuthGuard('google-custom'))
+  @UseGuards(AuthGuard('google'))
   async googleLogin(@Res() res) {}
 
   @Get('google/callback')
   @Public()
-  @UseGuards(AuthGuard('google-custom'))
+  @UseGuards(AuthGuard('google'))
   async googleLoginCallback(@Req() req, @Res() res) {
     const user = req.user;
-    console.log('user: ', JSON.stringify(user));
     const tokens: [string, string] = await this.authService.login(user);
-     res.setHeader('Content-Type', 'application/json');
-     res.status(HttpStatus.OK).send(tokens);
-    //console.log('web service:', this.apiConfigService.appWeb);
-    
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    //res.setHeader(
+    //  'Location',
+    //  `${this.apiConfigService.appWeb.clientUrl}/api/auth?success=1`,
+    //);
+    res.status(HttpStatus.OK).send(tokens);
   }
 }

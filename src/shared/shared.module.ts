@@ -5,10 +5,12 @@ import { PrismaService } from './services/prisma.service';
 import { PasetoService } from './services/paseto.service';
 import { JwtTokenService } from './services/jwt.service';
 import { TOKEN_SERVICE } from '../constants/auth.constant';
+import { SerializerInterceptor } from './interceptor/serializer.interceptor';
 
 const providers: Provider[] = [
   ApiConfigService,
   TransformInterceptor,
+  SerializerInterceptor,
   PrismaService,
   JwtTokenService,
   PasetoService,

@@ -32,17 +32,6 @@ export async function bootstrap(): Promise<NestExpressApplication> {
 
   app.setGlobalPrefix(globalPrefix);
 
-  //  app.use(session({
-  //    secret: 'encrypt cookies',
-  //    resave: false,
-  //    saveUninitialized: false,
-  //    cookie: {
-  //      maxAge: 60*60*1000,
-  //    }
-  //  }))
-  //  app.use(passport.initialize());
-  //  app.use(passport.session());
-
   const shutdown = () => {
     app
       .close()

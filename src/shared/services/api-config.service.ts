@@ -108,8 +108,8 @@ export class ApiConfigService {
 
   get appWeb(): AppWeb {
     return {
-      clientUrl: this.getString('CLIENT_URL')
-    }
+      clientUrl: this.getString('CLIENT_URL'),
+    };
   }
 
   private getOAuthGoogle(): OAuthGoogle {
@@ -121,7 +121,6 @@ export class ApiConfigService {
   }
 
   private is32BytesSymmetricKey(key: string): boolean {
-    console.log('key', key, key.length);
     return this.isByteLengthEqual(key, 32);
   }
 

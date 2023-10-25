@@ -19,6 +19,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { PasetoAuthGuard } from './guards/paseto-auth.guard';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { ApiConfigService } from './shared/services/api-config.service';
+import { SerializerInterceptor } from './shared/interceptor/serializer.interceptor';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -40,6 +41,10 @@ import { ApiConfigService } from './shared/services/api-config.service';
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: SerializerInterceptor,
     },
     {
       provide: APP_GUARD,
