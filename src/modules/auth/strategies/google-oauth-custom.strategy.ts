@@ -17,7 +17,6 @@ export class CustomGoogleStrategy extends PassportStrategy(
     super();
   }
 
-
   async validate(req: Request): Promise<any> {
     // Here you can implement your custom Google OAuth2 logic.
     // You can access the request object via `req`.
@@ -28,7 +27,7 @@ export class CustomGoogleStrategy extends PassportStrategy(
       // redirect to google login
       const url = this.authorizationURL();
       this.logger.debug('redirect to google login: ', url);
-	  throw new RedirectingException(url);
+      throw new RedirectingException(url);
     }
 
     const user = await this.authenticateWithGoogle(req);
@@ -77,6 +76,8 @@ export class CustomGoogleStrategy extends PassportStrategy(
     const { clientId, clientSecret, redirectUri } =
       this.apiConfigService.oauth.google;
 
+    const clientUrl = this.apiConfigService.app.clientUrl;
+
     const googleUrl = url.format({
       protocol: 'https',
       host: 'oauth2.googleapis.com',
@@ -85,7 +86,7 @@ export class CustomGoogleStrategy extends PassportStrategy(
         code,
         client_id: clientId,
         client_secret: clientSecret,
-        redirect_uri: redirectUri,
+        redirect_uri: `${clientUrl}${redirectUri}`,
         grant_type: 'authorization_code',
       },
     });
@@ -112,6 +113,9 @@ export class CustomGoogleStrategy extends PassportStrategy(
   // client_id=client_id
 
   authorizationURL(): string {
+    const { redirectUri } = this.apiConfigService.oauth.google;
+
+    const clientUrl = this.apiConfigService.app.clientUrl;
     return url.format({
       protocol: 'https',
       host: 'accounts.google.com',
@@ -121,7 +125,7 @@ export class CustomGoogleStrategy extends PassportStrategy(
         access_type: 'offline',
         include_granted_scopes: true,
         response_type: 'code',
-        redirect_uri: this.apiConfigService.oauth.google.redirectUri,
+        redirect_uri: `${clientUrl}${redirectUri}`,
         client_id: this.apiConfigService.oauth.google.clientId,
       },
     });
