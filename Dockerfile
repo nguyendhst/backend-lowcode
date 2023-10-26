@@ -43,7 +43,7 @@ ENV NODE_ENV production
 
 # In order to run `yarn build` we need access to the Nest CLI.
 # Nest CLI is a dev dependency.
-COPY --from=dev /app/node_modules ./node_modules
+COPY --from=development /app/node_modules ./node_modules
 # Copy source code
 COPY . .
 
