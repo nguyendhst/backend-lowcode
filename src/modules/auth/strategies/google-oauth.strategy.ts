@@ -14,7 +14,7 @@ export class GoogleOAuthStrategy extends PassportStrategy(Strategy, 'google') {
     super({
       clientID: apiConfigService.oauth.google.clientId,
       clientSecret: apiConfigService.oauth.google.clientSecret,
-      callbackURL: apiConfigService.oauth.google.redirectUri,
+      callbackURL: `${apiConfigService.app.clientUrl}${apiConfigService.oauth.google.redirectUri}`,
       scope: ['email', 'profile'],
     });
   }
@@ -24,7 +24,7 @@ export class GoogleOAuthStrategy extends PassportStrategy(Strategy, 'google') {
     refreshToken: string,
     profile: any,
     done: VerifyCallback,
-  ) : Promise<AuthPayloadDto> {
+  ): Promise<AuthPayloadDto> {
     const user = await this.authService.validateUser({
       firstName: profile.name.familyName,
       lastName: profile.name.givenName,
@@ -34,10 +34,10 @@ export class GoogleOAuthStrategy extends PassportStrategy(Strategy, 'google') {
     const returnUser = {
       id: user.id,
       email: user.email,
-      
+
       accessToken: accessToken,
-      refreshToken: refreshToken
-    }
+      refreshToken: refreshToken,
+    };
 
     return returnUser;
   }
