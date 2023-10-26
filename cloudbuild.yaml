@@ -15,7 +15,7 @@ steps:
    - '--image'
    - 'gcr.io/$PROJECT_ID/low-code-api:$COMMIT_SHA'
    - '--region'
-   - 'REGION'
+   - 'asia-east2'
 images:
  - 'gcr.io/$PROJECT_ID/low-code-api:$COMMIT_SHA'
 options:
