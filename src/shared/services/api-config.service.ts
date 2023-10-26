@@ -1,7 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { isNil } from 'lodash';
-import { AppConfig, DatabaseConfig } from '@interfaces/configuration.interface';
+import {
+  AppConfig,
+  AuthConfig,
+  DatabaseConfig,
+  JWT,
+  OAuth,
+  OAuthGoogle,
+  PASETO,
+} from '@interfaces/configuration.interface';
 
 @Injectable()
 export class ApiConfigService {
@@ -46,6 +54,7 @@ export class ApiConfigService {
   get app(): AppConfig {
     return {
       port: this.getNumber('PORT'),
+      clientUrl: this.getString('CLIENT_URL'),
     };
   }
 
@@ -55,5 +64,61 @@ export class ApiConfigService {
       port: this.getNumber('DATABASE_PORT'),
       uri: this.getString('DATABASE_URI'),
     };
+  }
+
+  get oauth(): OAuth {
+    return {
+      clientUrl: this.getString('CLIENT_URL'),
+      google: this.getOAuthGoogle(),
+    };
+  }
+
+  get jwt(): JWT {
+    return {
+      secret: this.getString('JWT_SECRET'),
+      expiresIn: this.getString('JWT_EXPIRES_IN'),
+      accessTokenExpiresIn: this.getString('JWT_ACCESS_TOKEN_EXPIRES_IN'),
+      refreshTokenExpiresIn: this.getString('JWT_REFRESH_TOKEN_EXPIRES_IN'),
+    };
+  }
+
+  get paseto(): PASETO {
+    const secret = this.getString('PASETO_SECRET');
+    if (!this.is32BytesSymmetricKey(secret)) {
+      throw new Error(
+        'PASETO_SECRET environment variable must be a 32 bytes long base64 string',
+      );
+    }
+
+    return {
+      secret,
+      expiresIn: this.getString('PASETO_EXPIRES_IN'),
+      accessTokenExpiresIn: this.getString('PASETO_ACCESS_TOKEN_EXPIRES_IN'),
+      refreshTokenExpiresIn: this.getString('PASETO_REFRESH_TOKEN_EXPIRES_IN'),
+    };
+  }
+
+  get authConfig(): AuthConfig {
+    return {
+      strategy: this.getString('AUTH_STRATEGY'),
+      jwt: this.jwt,
+      paseto: this.paseto,
+    };
+  }
+
+  private getOAuthGoogle(): OAuthGoogle {
+    return {
+      clientId: this.getString('GOOGLE_CLIENT_ID'),
+      clientSecret: this.getString('GOOGLE_CLIENT_SECRET'),
+      redirectUri: this.getString('GOOGLE_REDIRECT_URI'),
+    };
+  }
+
+  private is32BytesSymmetricKey(key: string): boolean {
+    return this.isByteLengthEqual(key, 32);
+  }
+
+  private isByteLengthEqual(key: string, length: number): boolean {
+    return Buffer.byteLength(key, 'utf-8') === length;
   }
 }

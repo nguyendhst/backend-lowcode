@@ -1,12 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ApiConfigService } from './shared/services/api-config.service';
+import { ApiConfigService } from '@shared/services/api-config.service';
 import rateLimit from 'express-rate-limit';
 import {
   ExpressAdapter,
   NestExpressApplication,
 } from '@nestjs/platform-express';
-import { SharedModule } from './shared/shared.module';
+import { SharedModule } from '@shared/shared.module';
+import { ValidationPipe } from '@nestjs/common';
+import { TransformInterceptor } from '@shared/interceptor/response-transform.interceptor';
 
 export async function bootstrap(): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(
@@ -21,6 +23,9 @@ export async function bootstrap(): Promise<NestExpressApplication> {
       max: 100, // limit each IP to 100 requests per windowMs
     }),
   );
+
+  app.useGlobalPipes(new ValidationPipe());
+
   const configService = app.select(SharedModule).get(ApiConfigService);
 
   const globalPrefix = 'api';

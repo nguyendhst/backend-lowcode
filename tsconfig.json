@@ -22,10 +22,12 @@
 				"src/modules/*"
 			],
 			"@services/*": [
-				"src/modules/user/services/*"
+				"src/modules/user/services/*",
+				"src/modules/auth/services/*"
 			],
 			"@controllers/*": [
-				"src/modules/user/controllers/*"
+				"src/modules/user/controllers/*",
+				"src/modules/auth/controllers/*"
 			],
 			"@configs/*": [
 				"src/configs/*"
@@ -34,10 +36,35 @@
 				"src/repositories/*"
 			],
 			"@interfaces/*": [
-				"src/interfaces/*"
+				"src/interfaces/*",
+				"src/modules/auth/interfaces/*"
 			],
 			"@shared/*": [
-				"src/shared/*"
+				"src/shared/*",
+				"src/shared/services/*"
+			],
+			"@strategies/*": [
+				"src/strategies/*",
+				"src/modules/auth/strategies/*"
+			],
+			"@dtos/*": [
+				"src/dtos/*"
+			],
+			"@constants/*": [
+				"src/constants/*",
+				"src/constants"
+			],
+			"@decorators/*": [
+				"src/decorators/*"
+			],
+			"@guards/*": [
+				"src/guards/*"
+			],
+			"@exceptions/*": [
+				"src/exceptions/*"
+			],
+			"@filters/*": [
+				"src/filters/*"
 			],
 		},
 	}
