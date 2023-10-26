@@ -24,6 +24,8 @@ export async function bootstrap(): Promise<NestExpressApplication> {
     }),
   );
 
+  app.enable('trust proxy');
+
   app.useGlobalPipes(new ValidationPipe());
 
   const configService = app.select(SharedModule).get(ApiConfigService);
