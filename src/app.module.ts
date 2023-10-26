@@ -20,6 +20,7 @@ import { PasetoAuthGuard } from './guards/paseto-auth.guard';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SerializerInterceptor } from './shared/interceptor/serializer.interceptor';
+import { GlobalExceptionFilter } from './filters/all.filter';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -66,6 +67,10 @@ import { SerializerInterceptor } from './shared/interceptor/serializer.intercept
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: GlobalExceptionFilter,
     },
   ],
 })
