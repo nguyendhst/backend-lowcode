@@ -12,4 +12,4 @@ bootstrap:
 
 
 up:
-	docker compose up -d --remove-orphans
+	docker compose -f compose.dev.yaml up -d --remove-orphans
