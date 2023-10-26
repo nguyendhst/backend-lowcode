@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { isNil } from 'lodash';
 import {
   AppConfig,
-  AppWeb,
   AuthConfig,
   DatabaseConfig,
   JWT,
@@ -55,6 +54,7 @@ export class ApiConfigService {
   get app(): AppConfig {
     return {
       port: this.getNumber('PORT'),
+      clientUrl: this.getString('CLIENT_URL'),
     };
   }
 
@@ -103,12 +103,6 @@ export class ApiConfigService {
       strategy: this.getString('AUTH_STRATEGY'),
       jwt: this.jwt,
       paseto: this.paseto,
-    };
-  }
-
-  get appWeb(): AppWeb {
-    return {
-      clientUrl: this.getString('CLIENT_URL'),
     };
   }
 

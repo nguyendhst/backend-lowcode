@@ -2,6 +2,11 @@ type LoginDto = {
   AccessToken: string;
 };
 
+type TokenSuccessResponse = {
+  AccessToken: string;
+  RefreshToken?: string;
+};
+
 type RefreshDto = {
   RefreshToken: string;
 };
@@ -21,6 +26,13 @@ type AuthPayloadDto = {
   email: string;
   accessToken: string;
   refreshToken: string;
-}
+};
 
-export { LoginDto, RegisterDto, RefreshDto, RegisterResponseDto, AuthPayloadDto };
+export {
+  LoginDto,
+  RegisterDto,
+  RefreshDto,
+  RegisterResponseDto,
+  AuthPayloadDto,
+  TokenSuccessResponse,
+};
