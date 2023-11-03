@@ -33,7 +33,7 @@ export class OAuthController {
 
     const redirectUrl = `${this.apiConfigService.app.clientUrl}/api/auth`;
     // Add tokens to the redirect url
-    const redirectUrlWithToken = `${redirectUrl}&accessToken=${tokens[0]}&refreshToken=${tokens[1]}`;
+    const redirectUrlWithToken = `${redirectUrl}?accessToken=${tokens[0]}&refreshToken=${tokens[1]}`;
 
     res.redirect(redirectUrlWithToken);
   }
